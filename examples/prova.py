@@ -3,6 +3,16 @@ import numpy as np
 import matplotlib.pyplot as plt
 #plt.style.use('ggplot')
 
+
+import os
+import sys
+from pickletools import optimize
+sys.path.append(os.path.abspath('../'))
+
+import maxest.estimate as es
+import numbers
+
+
 import GPy
 #GPy.plotting.change_plotting_library('plotly')
 
@@ -64,5 +74,6 @@ print(p, mu, np.sqrt(var))
 fig = m.plot()
 GPy.plotting.show(fig)
 plt.show()
-
 ###
+
+val = es.predict_max(m, minx, maxx, verbose=1, tfinp=es.scalar2array, epsabs=1.49e-05, epsrel=1.49e-05)
