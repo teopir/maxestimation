@@ -122,10 +122,13 @@ with open(path_name, "a+") as myfile:
 ###############################################################################
 # Maximum Double Estimator
 ###############################################################################
-rewardsA = rewardsW[1:len(rewardsW)/2]
-rewardsB = rewardsW[len(rewardsW)/2 + 1:len(rewardsW)]
-actionsA = discreteActions[1:len(discreteActions)/2]
-actionsB = discreteActions[len(discreteActions)/2 + 1 :len(discreteActions)]
+half_batch = int(len(rewardsW)/2.0)
+rewardsA = rewardsW[:half_batch]
+rewardsB = rewardsW[half_batch:]
+actionsA = discreteActions[:half_batch]
+actionsB = discreteActions[half_batch:]
+assert(len(rewardsA) == len(actionsA))
+assert(len(rewardsB) == len(actionsB))
 
 meansA = np.zeros(nbins);
 for i in range(1, nbins+1):
