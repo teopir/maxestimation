@@ -55,8 +55,10 @@ def prod_int_div_cdf(x, mu, sigma, gps, miny, maxy, verbose=0, tfinp=lambda x:x)
     :return:
     """
     def fpi(y):
-        loc, scale = gps.predict(tfinp(y))
-        loc, scale = array2scalar(loc), array2scalar(scale)
+        loc, var = gps.predict(tfinp(y))
+        ess = gps.ess(tfinp(y))
+        loc, var = array2scalar(loc), array2scalar(var)
+        scale = np.sqrt(var/ess)
         return norm.cdf(x, loc=loc, scale=scale)
 
     # compute comulative distribution
@@ -73,22 +75,34 @@ def prod_int_div_cdf(x, mu, sigma, gps, miny, maxy, verbose=0, tfinp=lambda x:x)
         return 0.0
     return pi / cdfx
 
+nump = 0
 
 def prob_z_is_max(z, gps, minz, maxz, verbose=0, tfinp=lambda x:x):
     assert minz <= z <= maxz, '{} not in [{}, {}]'.format(z, minz, maxz)
-    mu, sigma = gps.predict(tfinp(z))
-    mu, sigma = array2scalar(mu), array2scalar(sigma)
+    mu, var = gps.predict(tfinp(z))
+    ess = gps.ess(tfinp(z))
+    print(z, ess)
+    mu, var = array2scalar(mu), array2scalar(var)
+    sigma = np.sqrt(var/ess)
+    
+    global nump
+    nump = 0
     
     def myf(x):
+        global nump 
+        nump += 1
         return prod_int_div_cdf(x, mu, sigma, gps, minz, maxz, verbose=0, tfinp=tfinp)
 
     start = time()
+    
     val = norm.expect(myf, loc=mu, scale=sigma)
     if verbose > 0:
-        print('t[expected]: {}'.format(time()-start))
+        print('t[expected]: {}, #p: {}'.format(time()-start, nump))
     return val
 
 def predict_max(gps, minz, maxz, verbose=0, tfinp=lambda x:x, **kwargs):
+    
+    history = []
 
     def tmpf(x):
 #         print('x:', x)
@@ -97,10 +111,11 @@ def predict_max(gps, minz, maxz, verbose=0, tfinp=lambda x:x, **kwargs):
         assert isinstance(mu, numbers.Number)
         v = prob_z_is_max(x, gps, minz, maxz, verbose=verbose, tfinp=tfinp)
         value = mu * v
+        history.append([x,v])
         assert isinstance(value, numbers.Number), '{}'.format(value)
         return value
 
-    return integrate.quad(tmpf, minz, maxz, **kwargs)[0]
+    return integrate.quad(tmpf, minz, maxz, **kwargs)[0], history
 
 if __name__ == "__main__":
     mean = 1.0

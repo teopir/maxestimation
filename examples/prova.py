@@ -60,7 +60,7 @@ plt.show()
 ### Estimate GPs
 X = X.reshape(-1,1)
 Y = Y.reshape(-1,1)
-kernel = GPy.kern.RBF(input_dim=1, variance=0.001, lengthscale=1.)
+kernel = GPy.kern.RBF(input_dim=1, variance=0.01, lengthscale=.5)
 m = GPy.models.GPRegression(X, Y, kernel)
 m.optimize(messages=True)
 m.optimize_restarts(num_restarts=5)
