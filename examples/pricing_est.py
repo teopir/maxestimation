@@ -2,6 +2,7 @@ import numpy as np
 from time import time
 from optparse import OptionParser
 from scipy.stats import gamma
+import matplotlib.pylab as plt
 import GPy
 
 import os
@@ -162,6 +163,10 @@ if not opts.exclude_weighted:
     gp = GPy.models.GPRegression(x,y,kernel);
     gp.optimize_restarts(num_restarts=8, verbose=False)
     print(gp)
+    
+#     fig = gp.plot()
+#     GPy.plotting.show(fig)
+#     plt.show()
     
     #Maximum weighted
     maximumWE, h = es.predict_max(gp, minPrice, maxPrice, verbose=1,

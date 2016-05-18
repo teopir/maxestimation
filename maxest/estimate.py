@@ -32,7 +32,7 @@ def product_integral(f, a, b, verbose=0):
     :param b: the upper bound of the definite integral
     :return: the product integral
     """
-    result = integrate.quad(lambda x: np.log(f(x)), a, b, epsabs=1.49e-05, epsrel=1.49e-05)
+    result = integrate.quad(lambda x: np.log(f(x)), a, b, epsabs=0.001, epsrel=0.001)
     expres = np.exp(result[0])
     return expres
 
@@ -95,7 +95,8 @@ def prob_z_is_max(z, gps, minz, maxz, verbose=0, tfinp=lambda x:x):
 
     start = time()
     
-    val = norm.expect(myf, loc=mu, scale=sigma)
+    val = norm.expect(myf, loc=mu, scale=sigma, lb=mu-3.5*sigma, ub=mu+3.5*sigma,
+                      epsabs=0.001, epsrel=0.001)
     if verbose > 0:
         print('t[expected]: {}, #p: {}'.format(time()-start, nump))
     return val
