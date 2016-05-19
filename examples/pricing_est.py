@@ -1,9 +1,21 @@
 import numpy as np
 from time import time
 from optparse import OptionParser
-from scipy.stats import gamma
+from scipy.stats import gamma, norm
 import matplotlib.pylab as plt
 import GPy
+from sklearn import mixture
+
+gmm = mixture.GMM(n_components=3, n_iter=1)
+gmm.means_ = np.array([[2],[4], [8]])
+gmm.covars_ = np.array([[0.1], [0.1], [0.3]]) ** 2
+gmm.weights_ = np.array([0.6, 0.1, 0.3])
+
+# MU = [2;4;8];
+# SIGMA = cat(3,[0.1]^2,[0.1]^2,[0.1]^2);
+# p = [0.6,0.1,0.3];
+# obj = gmdistribution(MU,SIGMA,p);
+# plot(0:0.1:10, [0:0.1:10]' .* (1- cdf(obj,[0:0.1:10]')))
 
 import os
 import sys
@@ -75,7 +87,8 @@ scale = 1.5
 
 
 #DRAW SAMPLES
-tau = np.random.gamma(shape, scale, nsamples)
+# tau = np.random.gamma(shape, scale, nsamples)
+tau = gmm.sample(nsamples).ravel()
 actions = np.random.rand(nsamples)*(maxPrice-minPrice) + minPrice
 
 actionsBins = np.linspace(minPrice, maxPrice, nbins+1)
@@ -92,19 +105,23 @@ np.savetxt(path, data, delimiter=',')
 
 # plt.scatter(actions, rewardsW)
 # plt.show()
+# exit(8)
 
 
 ###############################################################################
 # REAL MAX
 ###############################################################################
-# x=np.linspace(0,maxPrice,1000);
-# a=gamma.pdf(x,shape, scale=scale)
-# p = x*(1 - gamma.cdf(x, a=shape, scale=scale));
-# 
-# 
-# plt.plot(x,a);
-# plt.plot(x,p);
-# plt.show();
+# x=np.linspace(0,maxPrice,1000)
+# # a=gamma.pdf(x,shape, scale=scale)
+# a=norm.pdf(x,8,0.1)
+# # p = x*(1 - gamma.cdf(x, a=shape, scale=scale))
+# p = x*(1 - norm.cdf(x, 8, 0.1))
+#  
+#  
+# plt.plot(x,a)
+# plt.plot(x,p)
+# plt.show()
+
 
 
 ###############################################################################
@@ -167,9 +184,9 @@ if not opts.exclude_weighted:
     gp.optimize_restarts(num_restarts=8, verbose=False)
     print(gp)
     
-#     fig = gp.plot()
-#     GPy.plotting.show(fig)
-#     plt.show()
+    fig = gp.plot()
+    GPy.plotting.show(fig)
+    plt.show()
     
     #Maximum weighted
     maximumWE, h = es.predict_max(gp, minPrice, maxPrice, verbose=1,
