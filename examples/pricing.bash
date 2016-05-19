@@ -1,29 +1,30 @@
 #!/bin/bash -x
 
-mkdir -p pricing_results/logs
-for i in {1..20}
+folder=pricing_results_gmm
+
+for i in {1..10}
 do
-        python3.5 pricing_est.py --nbins=15 --nsamples=300 --suffix=${i}
-#> pricing_results/logs/15_300_${i}.log
+        python3.5 pricing_est.py --nbins=15 --nsamples=100 --suffix=${i} --folder=${folder}
 done
 
-for i in {1..20}
+for i in {1..10}
 do
-        python3.5 pricing_est.py --nbins=15 --nsamples=200 --suffix=${i}
-#> pricing_results/logs/15_200_${i}.log
+        python3.5 pricing_est.py --nbins=15 --nsamples=300 --suffix=${i}  --folder=${folder}
 done
 
-for i in {1..20}
+for i in {1..10}
 do
-        python3.5 pricing_est.py --nbins=15 --nsamples=500 --suffix=${i}
-#> pricing_results/logs/15_100_${i}.log
+        python3.5 pricing_est.py --nbins=15 --nsamples=200 --suffix=${i} --folder=${folder}
 done
 
-for i in {1..20}
+for i in {1..10}
 do
-        python3.5 pricing_est.py --nbins=15 --nsamples=100 --suffix=${i}
-#> pricing_results/logs/15_100_${i}.log
+        python3.5 pricing_est.py --nbins=15 --nsamples=500 --suffix=${i} --folder=${folder}
 done
 
+for i in {1..10}
+do
+        python3.5 pricing_est.py --nbins=15 --nsamples=500 --suffix=${i} --folder=${folder}
+done
 
 echo "DONE"
