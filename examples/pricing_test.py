@@ -149,12 +149,6 @@ print(gp)
 gp.optimize_restarts(num_restarts=8)
 print(gp)
 
-posterior = gp.posterior
-winv = posterior.woodbury_inv
-K = posterior._K
-prod = np.dot(np.atleast_3d(winv).T, K)
-ess_inv = np.dot(prod, prod)
-
 fig = gp.plot()
 GPy.plotting.show(fig)
 plt.show()

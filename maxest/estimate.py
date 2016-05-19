@@ -81,7 +81,7 @@ def prob_z_is_max(z, gps, minz, maxz, verbose=0, tfinp=lambda x:x):
     assert minz <= z <= maxz, '{} not in [{}, {}]'.format(z, minz, maxz)
     mu, var = gps.predict(tfinp(z))
     ess = gps.ess(tfinp(z))
-    print(z, ess)
+    #print(z, ess)
     mu, var = array2scalar(mu), array2scalar(var)
     sigma = np.sqrt(var/ess)
     

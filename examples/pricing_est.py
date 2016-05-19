@@ -90,6 +90,9 @@ data = np.hstack((tau,actions,rewardsW))
 path = os.path.join(directory, 'data_'+str(nbins)+'_'+str(nsamples)+'_'+suffix+'.csv')
 np.savetxt(path, data, delimiter=',')
 
+# plt.scatter(actions, rewardsW)
+# plt.show()
+
 
 ###############################################################################
 # REAL MAX
