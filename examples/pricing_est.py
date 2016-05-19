@@ -184,9 +184,9 @@ if not opts.exclude_weighted:
     gp.optimize_restarts(num_restarts=8, verbose=False)
     print(gp)
     
-    fig = gp.plot()
-    GPy.plotting.show(fig)
-    plt.show()
+#     fig = gp.plot()
+#     GPy.plotting.show(fig)
+#     plt.show()
     
     #Maximum weighted
     maximumWE, h = es.predict_max(gp, minPrice, maxPrice, verbose=1,
