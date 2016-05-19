@@ -29,7 +29,10 @@ def ess(self, Xnew, kern=None):
     Winv = self.posterior.woodbury_inv
     Kx = kern.K(X, Xnew)
     weights = np.dot(Kx.T, Winv)
-    return 1.0 / np.asscalar(np.dot(weights,weights.T))
+    l1 = np.asscalar(np.linalg.norm(weights.T,1))
+    l2 = np.asscalar(np.linalg.norm(weights.T,2))
+    assert(np.allclose(l2*l2, np.asscalar(np.dot(weights,weights.T))))
+    return (l1*l1) / (l2*l2)
 
 GPy.models.GPRegression.ess = ess
 
