@@ -42,10 +42,10 @@ def product_integral(f, a, b, verbose=0):
     :param b: the upper bound of the definite integral
     :return: the product integral
     """
-    result = integrate.quad(lambda x: log(f(x)), a, b, epsabs=0.001, epsrel=0.001)
-    expres = exp(result[0])
-#     result = integrate.romberg(lambda x: log(f(x)), a, b, tol=0.00001, rtol=0.00001)
-#     expres = exp(result)
+#     result = integrate.quad(lambda x: log(f(x)), a, b, epsabs=0.001, epsrel=0.001)
+#     expres = exp(result[0])
+    result = integrate.romberg(lambda x: log(f(x)), a, b, tol=0.00001, rtol=0.00001)
+    expres = exp(result)
     return expres
 
 

@@ -21,6 +21,8 @@ import os
 import sys
 sys.path.append(os.path.abspath('../'))
 import maxest.estimate as es
+import maxest.fixsestimate as fixes
+from time import time
 
 # Inject effective sample size estimator
 def ess(self, Xnew, kern=None):
@@ -29,9 +31,10 @@ def ess(self, Xnew, kern=None):
     Winv = self.posterior.woodbury_inv
     Kx = kern.K(X, Xnew)
     weights = np.dot(Kx.T, Winv)
+    start = time()
     l1 = np.asscalar(np.linalg.norm(weights.T,1))
     l2 = np.asscalar(np.linalg.norm(weights.T,2))
-    assert(np.allclose(l2*l2, np.asscalar(np.dot(weights,weights.T))))
+    #assert(np.allclose(l2*l2, np.asscalar(np.dot(weights,weights.T))))
     return (l1*l1) / (l2*l2)
 
 GPy.models.GPRegression.ess = ess
@@ -192,11 +195,21 @@ if not opts.exclude_weighted:
 #     plt.show()
     
     #Maximum weighted
-    maximumWE, h = es.predict_max(gp, minPrice, maxPrice, verbose=1,
-                                tfinp=es.scalar2array, epsabs=0.001, epsrel=0.001, limit=30)
+#     maximumWE, h = es.predict_max(gp, minPrice, maxPrice, verbose=1,
+#                                 tfinp=es.scalar2array, epsabs=0.01, epsrel=0.01, limit=30)
+    maximumWE = fixes.compute_max(gp, minPrice, maxPrice, es.scalar2array)
     print('MWE maximum: {}'.format(maximumWE))
-    
+      
     path_name = os.path.join(directory, 'MWE_'+str(nbins)+'_'+str(nsamples)+'.txt')
     with open(path_name, "a+") as myfile:
         myfile.write(suffix + ',' + str(maximumWE) + '\n')
+        
+#     start = time()
+#     print("val: ", es.compute_max(gp, minPrice, maxPrice, tfinp=es.scalar2array, ops={"epsabs":1.49e-06, "epsrel":1.49e-06, "limit":10}))
+#     print("t: ", time()-start)
+
+        
+    start = time()
+    print("val: ", fixes.compute_max(gp, minPrice, maxPrice, es.scalar2array))
+    print("t: ", time()-start)
     
