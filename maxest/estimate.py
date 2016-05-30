@@ -3,7 +3,17 @@ import scipy.integrate as integrate
 from scipy.stats import norm
 from time import time
 import numbers
+from math import log, exp
 
+
+import logging
+# Display progress logs on stdout
+logging.basicConfig(level=logging.INFO,
+                    format='%(asctime)s %(levelname)s %(message)s')
+
+def identityfunc(x):
+    return x
+    
 def array2scalar(x):
     if isinstance(x, np.ndarray):
         assert len(x) == 1, 'Expected array of dimension 1. Given {}'.format(x)
@@ -32,8 +42,10 @@ def product_integral(f, a, b, verbose=0):
     :param b: the upper bound of the definite integral
     :return: the product integral
     """
-    result = integrate.quad(lambda x: np.log(f(x)), a, b, epsabs=0.001, epsrel=0.001)
-    expres = np.exp(result[0])
+    result = integrate.quad(lambda x: log(f(x)), a, b, epsabs=0.001, epsrel=0.001)
+    expres = exp(result[0])
+#     result = integrate.romberg(lambda x: log(f(x)), a, b, tol=0.00001, rtol=0.00001)
+#     expres = exp(result)
     return expres
 
 
@@ -117,6 +129,57 @@ def predict_max(gps, minz, maxz, verbose=0, tfinp=lambda x:x, **kwargs):
         return value
 
     return integrate.quad(tmpf, minz, maxz, **kwargs)[0], history
+
+def compute_max(gps, minz, maxz, tfinp=lambda x: x, ops={}):
+    
+    def bound_x(z):
+        # print("z: ", z)
+        z_tr = tfinp(z)
+        mu_z, var_z = gps.predict(z_tr)
+        ess = gps.ess(z_tr)
+        mu_z, var_z = array2scalar(mu_z), array2scalar(var_z)
+        # compute standard deviation with central limit theorem
+        sigma_clt_z = np.sqrt(var_z/ess)
+        # print(mu_z - 4 * sigma_clt_z, mu_z + 4 * sigma_clt_z)
+        return [mu_z - 3.5*sigma_clt_z, mu_z + 3.5*sigma_clt_z]
+    
+    def prod_int_funct(x, y):
+        y_tr = tfinp(y)
+        mu_y, var_y = gps.predict(y_tr)
+        ess = gps.ess(y_tr)
+        mu_y, var_y = array2scalar(mu_y), array2scalar(var_y)
+        scale = np.sqrt(var_y/ess)
+        return norm.cdf(x, loc=mu_y, scale=scale)
+    
+    def inner_f(x, z):
+        #print("x: {}, z: {}".format(x, z))
+        start = time()
+        z_tr = tfinp(z)
+        mu_z, var_z = gps.predict(z_tr)
+        ess = gps.ess(z_tr)
+        mu_z, var_z = array2scalar(mu_z), array2scalar(var_z)
+#         print('t: ', time()-start)
+#         start = time()
+        
+        # compute standard deviation with central limit theorem
+        sigma_clt_z = np.sqrt(var_z/ess)
+        fhat_z = norm.pdf(x, loc=mu_z, scale=sigma_clt_z)
+        Fhat_z = norm.cdf(x, loc=mu_z, scale=sigma_clt_z)
+        
+#         print('t: ', time()-start)
+#         start = time()
+        
+        pi_f = lambda y: prod_int_funct(x, y)
+        pi = product_integral(pi_f, minz, maxz, 0)
+        
+        out_val = mu_z * fhat_z * pi / Fhat_z
+        print('t: ', time()-start)
+        print('-'*40)
+        return out_val
+
+    # integral ranges are ordered from inner to outer
+    return integrate.nquad(inner_f, [bound_x, [minz, maxz]], opts=ops)[0]
+        
 
 if __name__ == "__main__":
     mean = 1.0
