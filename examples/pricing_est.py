@@ -105,7 +105,7 @@ rewardsW[actions<=tau]=actions[actions<=tau]
 # rewardsDiscrete=np.zeros(actions.size);
 # rewardsDiscrete[discreteActions<=tau]=discreteActions[discreteActions<=tau];
 
-data = np.hstack((tau,actions,rewardsW))
+data = np.hstack((tau.reshape(-1,1),actions.reshape(-1,1),rewardsW.reshape(-1,1)))
 path = os.path.join(directory, 'data_'+str(nbins)+'_'+str(nsamples)+'_'+suffix+'.csv')
 np.savetxt(path, data, delimiter=',')
 
@@ -133,6 +133,7 @@ np.savetxt(path, data, delimiter=',')
 ###############################################################################
 # Maximum ME
 ###############################################################################
+start = time()
 means=np.zeros(nbins)
 for i in range(1,nbins+1):
     means[i-1] = rewardsW[discreteActions == i].mean() 
@@ -140,15 +141,17 @@ for i in range(1,nbins+1):
         means[i-1]=0.0
 
 maxMeanME = max(means);
+total_time = time() - start
 print('MME maximum: {}'.format(maxMeanME))
 
 path_name = os.path.join(directory, 'MME_'+str(nbins)+'_'+str(nsamples)+'.txt')
 with open(path_name, "a+") as myfile:
-    myfile.write(suffix + ',' + str(maxMeanME) + '\n')
+    myfile.write(suffix + ',' + str(maxMeanME) + ',' + str(total_time) + '\n')
 
 ###############################################################################
 # Maximum Double Estimator
 ###############################################################################
+start = time()
 half_batch = int(len(rewardsW)/2.0)
 rewardsA = rewardsW[:half_batch]
 rewardsB = rewardsW[half_batch:]
@@ -173,11 +176,12 @@ maxActionA = np.argmax(meansA)
 maxActionB = np.argmax(meansB)
 
 maxMeanDouble = (meansA[maxActionB] + meansB[maxActionA])/2.0
+total_time = time() - start
 print('MMD maximum: {}'.format(maxMeanDouble))
 
 path_name = os.path.join(directory, 'MMD_'+str(nbins)+'_'+str(nsamples)+'.txt')
 with open(path_name, "a+") as myfile:
-    myfile.write(suffix + ',' + str(maxMeanDouble) + '\n')
+    myfile.write(suffix + ',' + str(maxMeanDouble) + ',' + str(total_time) + '\n')
 
 ###############################################################################
 # Maximum Probability
@@ -195,21 +199,18 @@ if not opts.exclude_weighted:
 #     plt.show()
     
     #Maximum weighted
+    start = time()
 #     maximumWE, h = es.predict_max(gp, minPrice, maxPrice, verbose=1,
 #                                 tfinp=es.scalar2array, epsabs=0.01, epsrel=0.01, limit=30)
-    maximumWE = fixes.compute_max(gp, minPrice, maxPrice, es.scalar2array)
+#     maximumWE = fixes.compute_max(gp, minPrice, maxPrice, es.scalar2array)   
+#     maximumWE = es.compute_max(gp, minPrice, maxPrice, tfinp=es.scalar2array, ops={"epsabs":1.49e-06, "epsrel":1.49e-06, "limit":10})
+    total_time = time() - start
+
+    
     print('MWE maximum: {}'.format(maximumWE))
       
     path_name = os.path.join(directory, 'MWE_'+str(nbins)+'_'+str(nsamples)+'.txt')
     with open(path_name, "a+") as myfile:
-        myfile.write(suffix + ',' + str(maximumWE) + '\n')
+        myfile.write(suffix + ',' + str(maximumWE) + ',' + str(total_time) + '\n')
         
-#     start = time()
-#     print("val: ", es.compute_max(gp, minPrice, maxPrice, tfinp=es.scalar2array, ops={"epsabs":1.49e-06, "epsrel":1.49e-06, "limit":10}))
-#     print("t: ", time()-start)
-
         
-    start = time()
-    print("val: ", fixes.compute_max(gp, minPrice, maxPrice, es.scalar2array))
-    print("t: ", time()-start)
-    
