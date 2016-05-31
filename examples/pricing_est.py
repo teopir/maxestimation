@@ -203,7 +203,7 @@ if not opts.exclude_weighted:
 #     maximumWE, h = es.predict_max(gp, minPrice, maxPrice, verbose=1,
 #                                 tfinp=es.scalar2array, epsabs=0.01, epsrel=0.01, limit=30)
 #     maximumWE = fixes.compute_max(gp, minPrice, maxPrice, es.scalar2array)   
-#     maximumWE = es.compute_max(gp, minPrice, maxPrice, tfinp=es.scalar2array, ops={"epsabs":1.49e-06, "epsrel":1.49e-06, "limit":10})
+    maximumWE = es.compute_max(gp, minPrice, maxPrice, tfinp=es.scalar2array, ops={"epsabs":1.49e-03, "epsrel":1.49e-03, "limit":30})
     total_time = time() - start
 
     

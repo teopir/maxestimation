@@ -174,7 +174,7 @@ def compute_max(gps, minz, maxz, tfinp=lambda x: x, ops={}):
         
         out_val = mu_z * fhat_z * pi / Fhat_z
         print('t: ', time()-start)
-        print('-'*40)
+#         print('-'*40)
         return out_val
 
     # integral ranges are ordered from inner to outer
