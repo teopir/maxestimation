@@ -2,7 +2,7 @@
 
 export OMP_NUM_THREADS=2
 folder=pricing_results_gmm
-cmd=nice -n 10 python3.5 pricing_est.py
+cmd="nice -n 10 python3.5 pricing_est.py"
 
 for i in {1..10}
 do

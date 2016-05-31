@@ -142,7 +142,7 @@ for i in range(1,nbins+1):
 
 maxMeanME = max(means);
 total_time = time() - start
-print('MME maximum: {}'.format(maxMeanME))
+print('MME maximum: {} (t: {})'.format(maxMeanME, total_time))
 
 path_name = os.path.join(directory, 'MME_'+str(nbins)+'_'+str(nsamples)+'.txt')
 with open(path_name, "a+") as myfile:
@@ -177,7 +177,7 @@ maxActionB = np.argmax(meansB)
 
 maxMeanDouble = (meansA[maxActionB] + meansB[maxActionA])/2.0
 total_time = time() - start
-print('MMD maximum: {}'.format(maxMeanDouble))
+print('MMD maximum: {} (t: {})'.format(maxMeanDouble, total_time))
 
 path_name = os.path.join(directory, 'MMD_'+str(nbins)+'_'+str(nsamples)+'.txt')
 with open(path_name, "a+") as myfile:
@@ -207,7 +207,7 @@ if not opts.exclude_weighted:
     total_time = time() - start
 
     
-    print('MWE maximum: {}'.format(maximumWE))
+    print('MWE maximum: {} (t: {})'.format(maximumWE, total_time))
       
     path_name = os.path.join(directory, 'MWE_'+str(nbins)+'_'+str(nsamples)+'.txt')
     with open(path_name, "a+") as myfile:

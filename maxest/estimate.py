@@ -1,3 +1,4 @@
+from __future__ import print_function
 import numpy as np
 import scipy.integrate as integrate
 from scipy.stats import norm
@@ -173,8 +174,8 @@ def compute_max(gps, minz, maxz, tfinp=lambda x: x, ops={}):
         pi = product_integral(pi_f, minz, maxz, 0)
         
         out_val = mu_z * fhat_z * pi / Fhat_z
-        print('t: ', time()-start)
-#         print('-'*40)
+#        print('t: ', time()-start)
+#        print('-'*40)
         return out_val
 
     # integral ranges are ordered from inner to outer
