@@ -1,8 +1,8 @@
 #!/bin/bash -x
 
-folder='pricing_results/noweighted_gamma'
+folder='pricing_results_gmm/noweighted_gmm'
 
-for i in {900..920}
+for i in {900..910}
 do
 	for b in {2..10..2}
 	do
