@@ -1,5 +1,5 @@
 project(maxest)
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.8.10)
 
 #----------------------- CMAKE MODULES ------------------------
 
@@ -24,7 +24,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fPIC")
 
 # ------------------------ MESSAGES ----------------------------
 
-message(STATUS "Build type       : " ${BUILD_TYPE_MSG})
+message(STATUS "Build type       : " ${CMAKE_BUILD_TYPE})
 
 # ------------------------ BUILD -------------------------------
 file(GLOB_RECURSE _SOURCE src/*.cpp)
