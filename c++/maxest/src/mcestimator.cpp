@@ -51,19 +51,21 @@ double g_mc(double *k, size_t dim, void *params)
     MaxEstimatorParameters *p = (MaxEstimatorParameters*) params;
     MaxEstApproximator* gp = p->qf;
 
-    double var_z, mu_z, sigma_z;
-    mu_z = gp->predict(z, var_z);
-    sigma_z = sqrt(var_z);
+    double var_z, mu_z, sigma_z, ess_z;
+    mu_z = gp->predict(z, var_z, ess_z);
+    sigma_z = sqrt(var_z/ess_z);
 
     double w_z = 0.0;
 
-    int i, nbPoints = 8*sigma_z*100;
+    int i, nbPoints = 8*sigma_z*150;
     // std::cout << z << ", " << nbPoints << std::endl;
-    arma::vec maxValues = sigma_z * arma::randn<arma::vec>(nbPoints) + mu_z;
+    std::default_random_engine generator;
+    std::normal_distribution<double> n01(0.0,1.0);
+
     for (i = 0; i < nbPoints; ++i)
     {
         double x, cdf_x, pi;
-        x = maxValues[i];
+        x = sigma_z * n01(generator) + mu_z;
         // per usare il parallelo allocate un nuovo MaxEstimatorParameters
         p->x = x; //set current point
 
@@ -112,7 +114,7 @@ double mc_predict_max(MaxEstApproximator *qf, double minz, double maxz,
 
     if (calls == 0)
     {
-        calls = (maxz-minz) * 500;
+        calls = (maxz-minz) * 150;
     }
 
     gsl_rng_env_setup ();
@@ -176,9 +178,9 @@ double g_mc_2(double *k, size_t dim, void *params)
 
         double z = points[i];
 
-        double var_z, mu_z, sigma_z;
-        mu_z = gp->predict(z, var_z);
-        sigma_z = sqrt(var_z);
+        double var_z, mu_z, sigma_z, ess_z;
+        mu_z = gp->predict(z, var_z, ess_z);
+        sigma_z = sqrt(var_z/ess_z);
 
         double pdf_z, cdf_z;
         pdf_z = pdf(x, mu_z, sigma_z);

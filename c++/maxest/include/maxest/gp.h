@@ -15,10 +15,10 @@ class GP : public MaxEstApproximator
 public:
     GP(arma::mat X, arma::mat Y, double l, double sigmaf, double sigman);
     GP(char* X_path, char* Y_path, double l, double sigmaf, double sigman);
-    double predict(arma::vec& x, double& variance);
-    double predict(double x, double& variance);
+    double predict(arma::vec& x, double& variance, double &ess);
+    double predict(double x, double& variance, double &ess);
 
-private:
+public:
     void init_kernel(arma::mat& X);
 
     arma::mat K, invNoisyKernel;

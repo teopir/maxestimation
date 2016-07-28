@@ -10,15 +10,16 @@ class QF : public MaxEstApproximator
 {
 public:
 
-    double predict(double x, double& var)
+    double predict(double x, double& var, double& ess)
     {
         var = 0.001;
+        ess = 1.0;
         return x*(1-x);
     }
 
-    double predict(arma::vec& x, double& variance)
+    double predict(arma::vec& x, double& variance, double& ess)
     {
-        return predict(x[0], variance);
+        return predict(x[0], variance, ess);
     }
 
 };

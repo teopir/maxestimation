@@ -37,10 +37,9 @@ main(int argc, char *argv[])
     GP gp(argv[1], argv[2], l, sigmaf, sigman);
     std::cout << "created GP" << std::endl;
 
-    //    double var;
-    //    double pred = gp.predict(2., var);
-
-    //    cout << "pred: " << pred << ", std: " << sqrt(var) << endl;
+    //    double var, ess;
+    //    double pred = gp.predict(5., var, ess);
+    //    cout << "pred: " << pred << ", std: " << sqrt(var) << ", ess: " << ess << endl;
 
     int verbose = 0;
     auto start = chrono::steady_clock::now();
@@ -51,7 +50,7 @@ main(int argc, char *argv[])
     std::cout << chrono::duration <double, milli> (diff).count() << " ms" << std::endl;
 
     start = chrono::steady_clock::now();
-    val = mc_predict_max(&gp, -1., 1., 0, verbose);
+    val = mc_predict_max(&gp, minz, maxz, 0, verbose);
     end = chrono::steady_clock::now();
     diff = end - start;
 
