@@ -214,7 +214,7 @@ if not opts.exclude_weighted:
 
     start = time()
     cmd = "../c++/build/examples/maxestfromgp"
-    resfn = 'res' + str(suffix) + '.dat'
+    resfn = 'res_' + str(nbins) + '_' + str(suffix) + '.dat'
     tool = Popen([cmd, xfn, yfn,
                   str(l), str(sigma_f), str(sigma_n), str(minPrice), str(maxPrice), resfn],
                  stdout=PIPE, stderr=PIPE)
