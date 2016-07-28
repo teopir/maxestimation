@@ -27,6 +27,12 @@ main(int argc, char *argv[])
         exit(1);
     }
 
+    char* outfile = "res.dat";
+    if (argc == 9) {
+        outfile = argv[8];
+    }
+    std::cout << "output will be written in " << outfile << std::endl;
+
     double l = atof(argv[3]);
     double sigmaf = atof(argv[4]);
     double sigman = atof(argv[5]);
@@ -48,14 +54,18 @@ main(int argc, char *argv[])
     auto diff = end - start;
     std::cout << "max = " << val << " in ";
     std::cout << chrono::duration <double, milli> (diff).count() << " ms" << std::endl;
+    ofstream f(outfile);
+    if (f.is_open()) {
+        f << val << std::endl;
+    }
 
-    start = chrono::steady_clock::now();
-    val = mc_predict_max(&gp, minz, maxz, 0, verbose);
-    end = chrono::steady_clock::now();
-    diff = end - start;
+//    start = chrono::steady_clock::now();
+//    val = mc_predict_max(&gp, minz, maxz, 0, verbose);
+//    end = chrono::steady_clock::now();
+//    diff = end - start;
 
-    std::cout << "max = " << val << " in ";
-    std::cout << chrono::duration <double, milli> (diff).count() << " ms" << std::endl;
+//    std::cout << "max = " << val << " in ";
+//    std::cout << chrono::duration <double, milli> (diff).count() << " ms" << std::endl;
     return 0;
 }
 

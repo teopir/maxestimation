@@ -7,9 +7,9 @@
 #include <gsl/gsl_integration.h>
 #include <armadillo>
 
-#define ABS_PREC 1e-9
-#define REL_PREC 1e-6
-#define NBINS 30000
+#define ABS_PREC 1e-6
+#define REL_PREC 1e-4
+#define NBINS 10000
 
 
 class MaxEstApproximator
