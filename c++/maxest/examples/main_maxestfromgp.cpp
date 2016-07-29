@@ -44,8 +44,8 @@ main(int argc, char *argv[])
     std::cout << "created GP" << std::endl;
 
     //    double var, ess;
-    //    double pred = gp.predict(5., var, ess);
-    //    cout << "pred: " << pred << ", std: " << sqrt(var) << ", ess: " << ess << endl;
+    //    double pred = gp.predict(.5, var, ess);
+    //    cout << "pred: " << pred << ", var: " << var << ", std: " << sqrt(var) << ", ess: " << ess << endl;
 
     int verbose = 0;
     auto start = chrono::steady_clock::now();

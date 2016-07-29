@@ -33,12 +33,16 @@ double GP::predict(arma::vec& x, double& variance, double& ess)
         k_star(i) = RBFKernel(x, row_i, l, sigmaf);
     }
 
-    double mean = arma::dot(k_star, invNoisyKernel * Y);
-    variance = RBFKernel(x, x, l, sigmaf) - arma::dot(k_star, invNoisyKernel * k_star) + sigman * sigman;
-    arma::mat w = k_star.t() * invNoisyKernel;
-    double l1 = arma::norm(w, 1);
-    double l2 = arma::norm(w, 2);
-    ess = l1 * l1 / (l2 * l2);
+    arma::vec w = invNoisyKernel * k_star;
+    double mean = arma::dot(Y, w);
+    variance = RBFKernel(x, x, l, sigmaf) - arma::dot(k_star, w) + sigman * sigman;
+    double l1 = 0, l2s = 0;
+    for (int i = 0;  i < w.n_elem; ++i) {
+        double v = w[i];
+        l1 += fabs(v);
+        l2s += v*v;
+    }
+    ess = l1 * l1 / l2s;
     return mean;
 }
 
