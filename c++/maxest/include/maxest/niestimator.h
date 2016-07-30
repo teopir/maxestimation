@@ -15,8 +15,9 @@
 class MaxEstApproximator
 {
 public:
-    virtual double predict(arma::vec& x, double& variance, double& ess) = 0;
-    virtual double predict(double x, double& variance, double& ess) = 0;
+    virtual double predict(arma::vec& x, double& variance) = 0;
+    virtual double predict(double x, double& variance) = 0;
+    virtual double get_noise_sigma() = 0;
 };
 
 

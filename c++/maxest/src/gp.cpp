@@ -23,7 +23,7 @@ GP::GP(char *X_path, char *Y_path, double l, double sigmaf, double sigman)
 
 }
 
-double GP::predict(arma::vec& x, double& variance, double& ess)
+double GP::predict(arma::vec& x, double& variance)
 {
     int npoints = X.n_rows;
     arma::vec k_star(npoints);
@@ -36,21 +36,14 @@ double GP::predict(arma::vec& x, double& variance, double& ess)
     arma::vec w = invNoisyKernel * k_star;
     double mean = arma::dot(Y, w);
     variance = RBFKernel(x, x, l, sigmaf) - arma::dot(k_star, w) + sigman * sigman;
-    double l1 = 0, l2s = 0;
-    for (int i = 0;  i < w.n_elem; ++i) {
-        double v = w[i];
-        l1 += fabs(v);
-        l2s += v*v;
-    }
-    ess = l1 * l1 / l2s;
     return mean;
 }
 
-double GP::predict(double x, double& variance, double& ess)
+double GP::predict(double x, double& variance)
 {
     arma::vec point(1);
     point(0) = x;
-    return predict(point, variance, ess);
+    return predict(point, variance);
 }
 
 void GP::init_kernel(arma::mat &X)

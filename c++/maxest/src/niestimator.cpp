@@ -18,9 +18,10 @@ double product_integral_exponent (double y, void * params)
     MaxEstApproximator* qf = p->qf;
     double x = p->x;
 
-    double var, ess;
-    double mu = qf->predict(y, var, ess);
-    double cdf_val = cdf(x, mu, sqrt(var/ess));
+    double var, ns;
+    double mu = qf->predict(y, var);
+    ns = qf->get_noise_sigma();
+    double cdf_val = cdf(x, mu, sqrt(var - ns*ns));
 
     double f = log(fmax(1e-12, cdf_val));
     return f;
@@ -76,9 +77,10 @@ double prob_z_is_max(double z, void* params)
     MaxEstApproximator* qf = p->qf;
 
 
-    double var_z, ess_z;
-    double mu_z = qf->predict(z, var_z, ess_z);
-    double sigma_z = sqrt(var_z/ess_z);
+    double var_z, ns;
+    double mu_z = qf->predict(z, var_z);
+    ns = qf->get_noise_sigma();
+    double sigma_z = sqrt(var_z - ns*ns);
 
     // Compute product integral
     gsl_integration_cquad_workspace* w = gsl_integration_cquad_workspace_alloc (NBINS);

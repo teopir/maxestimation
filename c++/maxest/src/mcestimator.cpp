@@ -51,9 +51,10 @@ double g_mc(double *k, size_t dim, void *params)
     MaxEstimatorParameters *p = (MaxEstimatorParameters*) params;
     MaxEstApproximator* gp = p->qf;
 
-    double var_z, mu_z, sigma_z, ess_z;
-    mu_z = gp->predict(z, var_z, ess_z);
-    sigma_z = sqrt(var_z/ess_z);
+    double var_z, mu_z, sigma_z, ns;
+    mu_z = gp->predict(z, var_z);
+    ns = gp->get_noise_sigma();
+    sigma_z = sqrt(var_z - ns*ns);
 
     double w_z = 0.0;
 
@@ -178,9 +179,10 @@ double g_mc_2(double *k, size_t dim, void *params)
 
         double z = points[i];
 
-        double var_z, mu_z, sigma_z, ess_z;
-        mu_z = gp->predict(z, var_z, ess_z);
-        sigma_z = sqrt(var_z/ess_z);
+        double var_z, mu_z, sigma_z, ns;
+        mu_z = gp->predict(z, var_z);
+        ns = gp->get_noise_sigma();
+        sigma_z = sqrt(var_z - ns*ns);
 
         double pdf_z, cdf_z;
         pdf_z = pdf(x, mu_z, sigma_z);

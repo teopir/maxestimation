@@ -28,7 +28,8 @@ main(int argc, char *argv[])
     }
 
     char* outfile = "res.dat";
-    if (argc == 9) {
+    if (argc == 9)
+    {
         outfile = argv[8];
     }
     std::cout << "output will be written in " << outfile << std::endl;
@@ -55,7 +56,8 @@ main(int argc, char *argv[])
     std::cout << "max = " << val << " in ";
     std::cout << chrono::duration <double, milli> (diff).count() << " ms" << std::endl;
     ofstream f(outfile);
-    if (f.is_open()) {
+    if (f.is_open())
+    {
         f << val << std::endl;
     }
 
