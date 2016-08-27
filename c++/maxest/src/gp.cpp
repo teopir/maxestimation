@@ -29,7 +29,7 @@ double GP::predict(arma::vec& x, double& variance)
     arma::vec k_star(npoints);
     for (unsigned int i = 0; i < npoints; ++i)
     {
-        arma::vec row_i = X.row(i);
+        arma::vec row_i = X.row(i).t();
         k_star(i) = RBFKernel(x, row_i, l, sigmaf);
     }
 
@@ -54,10 +54,10 @@ void GP::init_kernel(arma::mat &X)
     K.reshape(npoints, npoints);
     for (unsigned int i = 0; i < npoints; ++i)
     {
-        arma::vec row_i = X.row(i);
+        arma::vec row_i = X.row(i).t();
         for (unsigned int j = 0; j < npoints; ++j)
         {
-            arma::vec row_j = X.row(j);
+            arma::vec row_j = X.row(j).t();
             K(i,j) = RBFKernel(row_i, row_j, l, sigmaf);
         }
     }

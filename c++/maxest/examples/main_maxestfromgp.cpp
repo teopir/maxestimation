@@ -10,7 +10,7 @@ using namespace std;
 void help()
 {
     cout << "./maxestfromgp " << endl;
-    cout << "Inputs: X, y, l, sigmaf, sigman, zmin, zmax" << endl;
+    cout << "Inputs: X, y, l, sigmaf, sigman, zmin, zmax, [output_file]" << endl;
 }
 
 int
