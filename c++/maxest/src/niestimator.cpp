@@ -19,7 +19,8 @@ double product_integral_exponent (double y, void * params)
     double x = p->x;
 
     double var, ns;
-    double mu = qf->predict(y, var);
+    p->gp_input[p->gp_input.n_elem-1] = y;
+    double mu = qf->predict(p->gp_input, var);
     ns = qf->get_noise_sigma();
     double cdf_val = cdf(x, mu, sqrt(var - ns*ns));
 
@@ -78,7 +79,9 @@ double prob_z_is_max(double z, void* params)
 
 
     double var_z, ns;
-    double mu_z = qf->predict(z, var_z);
+    p->gp_input[p->gp_input.n_elem-1] = z;
+    //std::cerr << p->gp_input.t();
+    double mu_z = qf->predict(p->gp_input, var_z);
     ns = qf->get_noise_sigma();
     double sigma_z = sqrt(var_z - ns*ns);
 
@@ -112,7 +115,7 @@ double prob_z_is_max(double z, void* params)
     return w_z * mu_z;
 }
 
-double ni_predict_max(MaxEstApproximator* qf, double minz, double maxz, int verbose)
+double ni_predict_max(MaxEstApproximator* qf, double minz, double maxz, int verbose, arma::vec state)
 {
 
     // Compute product integral
@@ -124,6 +127,7 @@ double ni_predict_max(MaxEstApproximator* qf, double minz, double maxz, int verb
     pl.space_lower = minz;
     pl.space_upper = maxz;
     pl.verbose = verbose;
+    pl.gp_input = arma::join_vert(state, arma::zeros<arma::vec>(1));
     F.params = &pl;
     double result, error;
     size_t intervals;

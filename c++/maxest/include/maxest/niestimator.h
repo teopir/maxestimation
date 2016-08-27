@@ -28,6 +28,7 @@ struct MaxEstimatorParameters
     double x;
     double space_lower, space_upper;
     int verbose;
+    arma::vec gp_input;
 };
 
 double pdf(double x, double mu, double sigma);
@@ -40,6 +41,7 @@ double prod_int_div_cdf(double x, void * params);
 
 double prob_z_is_max(double z, void* params);
 
-double ni_predict_max(MaxEstApproximator* qf, double minz, double maxz, int verbose);
+double ni_predict_max(MaxEstApproximator* qf, double minz, double maxz, int verbose,
+                      arma::vec state=arma::vec());
 
 #endif // NIESTIMATOR_H

@@ -10,7 +10,7 @@ using namespace std;
 void help()
 {
     cout << "./maxestfromgp " << endl;
-    cout << "Inputs: X, y, l, sigmaf, sigman, zmin, zmax, [output_file]" << endl;
+    cout << "Inputs: X, y, l, sigmaf, sigman, zmin, zmax output_file [state_file]" << endl;
 }
 
 int
@@ -18,7 +18,7 @@ main(int argc, char *argv[])
 {
     std::cout << "---------------" << std::endl;
     /*
-     * inputs: X, y, l, sigmaf, sigman, zmin, zmax
+     * inputs: X, y, l, sigmaf, sigman, zmin, zmax, output_file, state_file (optional)
      */
     if (argc < 8)
     {
@@ -27,12 +27,13 @@ main(int argc, char *argv[])
         exit(1);
     }
 
-    char* outfile = "res.dat";
-    if (argc == 9)
-    {
-        outfile = argv[8];
-    }
+    char* outfile = argv[8];
     std::cout << "output will be written in " << outfile << std::endl;
+
+    arma::vec state;
+    if (argc == 10) {
+        state.load(argv[9], arma::auto_detect);
+    }
 
     double l = atof(argv[3]);
     double sigmaf = atof(argv[4]);
@@ -50,7 +51,7 @@ main(int argc, char *argv[])
 
     int verbose = 0;
     auto start = chrono::steady_clock::now();
-    double val = ni_predict_max(&gp, minz, maxz, verbose);
+    double val = ni_predict_max(&gp, minz, maxz, verbose, state);
     auto end = chrono::steady_clock::now();
     auto diff = end - start;
     std::cout << "max = " << val << " in ";
