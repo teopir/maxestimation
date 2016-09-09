@@ -41,22 +41,22 @@ import maxest.fixsestimate as fixes
 from time import time
 
 
-# Inject effective sample size estimator
-def ess(self, Xnew, kern=None):
-    kern = self.kern if kern is None else kern
-    X = self._predictive_variable
-    Winv = self.posterior.woodbury_inv
-    Kx = kern.K(X, Xnew)
-    weights = np.dot(Kx.T, Winv)
-    start = time()
-    l1 = np.asscalar(np.linalg.norm(weights.T, 1))
-    l2 = np.asscalar(np.linalg.norm(weights.T, 2))
-    # assert(np.allclose(l2*l2, np.asscalar(np.dot(weights,weights.T))))
-    ess_v = (l1 * l1) / (l2 * l2)
-    return ess_v
-
-
-GPy.models.GPRegression.ess = ess
+## Inject effective sample size estimator
+#def ess(self, Xnew, kern=None):
+#    kern = self.kern if kern is None else kern
+#    X = self._predictive_variable
+#    Winv = self.posterior.woodbury_inv
+#    Kx = kern.K(X, Xnew)
+#    weights = np.dot(Kx.T, Winv)
+#    start = time()
+#    l1 = np.asscalar(np.linalg.norm(weights.T, 1))
+#    l2 = np.asscalar(np.linalg.norm(weights.T, 2))
+#    # assert(np.allclose(l2*l2, np.asscalar(np.dot(weights,weights.T))))
+#    ess_v = (l1 * l1) / (l2 * l2)
+#    return ess_v
+#
+#
+#GPy.models.GPRegression.ess = ess
 
 # parse commandline arguments
 op = OptionParser(usage="usage: %prog [options] suffix nbins nsamples",
