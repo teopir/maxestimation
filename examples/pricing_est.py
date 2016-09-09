@@ -208,11 +208,13 @@ if not opts.exclude_weighted:
     #     GPy.plotting.show(fig)
     #     plt.show()
 
+    identifier = str(suffix) + '_' + str(nbins) + '_' + str(nsamples)
+    
     sigma_n = sqrt(gp.Gaussian_noise.variance.values[0])
     l = kernel.lengthscale.values[0]
     sigma_f = sqrt(kernel.variance.values[0])
-    xfn = os.path.abspath('x.dat')
-    yfn = os.path.abspath('y.dat')
+    xfn = os.path.abspath(identifier + 'x.dat')
+    yfn = os.path.abspath(identifier + 'y.dat')
     np.savetxt(xfn, x, delimiter=',')
     np.savetxt(yfn, y, delimiter=',')
 
@@ -221,11 +223,11 @@ if not opts.exclude_weighted:
 
     start = time()
     cmd = "../c++/build/examples/maxestfromgp"
-    resfn = 'res_' + str(nbins) + '_' + str(suffix) + '.dat'
+    resfn = 'res_' + identifier +  '.dat'
     tool = Popen([cmd, xfn, yfn,
                   str(l), str(sigma_f), str(sigma_n), str(minPrice), str(maxPrice), resfn],
                  stdout=PIPE, stderr=PIPE)
-    tee = Popen(['tee', 'log_file'], stdin=tool.stdout)
+    tee = Popen(['tee', 'log_file_' + identifier], stdin=tool.stdout)
     tool.stdout.close()
     tee.communicate()
 
