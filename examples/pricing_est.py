@@ -4,6 +4,7 @@ from optparse import OptionParser
 from scipy.stats import gamma, norm
 import matplotlib.pylab as plt
 import GPy
+import os
 from sklearn import mixture
 from math import sqrt
 
@@ -209,12 +210,12 @@ if not opts.exclude_weighted:
     #     plt.show()
 
     identifier = str(suffix) + '_' + str(nbins) + '_' + str(nsamples)
-    
+
     sigma_n = sqrt(gp.Gaussian_noise.variance.values[0])
     l = kernel.lengthscale.values[0]
     sigma_f = sqrt(kernel.variance.values[0])
-    xfn = os.path.abspath(identifier + 'x.dat')
-    yfn = os.path.abspath(identifier + 'y.dat')
+    xfn = os.path.abspath(identifier + '_x.dat')
+    yfn = os.path.abspath(identifier + '_y.dat')
     np.savetxt(xfn, x, delimiter=',')
     np.savetxt(yfn, y, delimiter=',')
 
@@ -223,11 +224,12 @@ if not opts.exclude_weighted:
 
     start = time()
     cmd = "../c++/build/examples/maxestfromgp"
-    resfn = 'res_' + identifier +  '.dat'
+    resfn = 'res_' + identifier + '.dat'
     tool = Popen([cmd, xfn, yfn,
                   str(l), str(sigma_f), str(sigma_n), str(minPrice), str(maxPrice), resfn],
                  stdout=PIPE, stderr=PIPE)
-    tee = Popen(['tee', 'log_file_' + identifier], stdin=tool.stdout)
+    logfile = 'log_file_' + identifier + '.log'
+    tee = Popen(['tee', logfile], stdin=tool.stdout)
     tool.stdout.close()
     tee.communicate()
 
@@ -242,6 +244,10 @@ if not opts.exclude_weighted:
     # maximumWE = es.compute_max(gp, minPrice, maxPrice, tfinp=es.scalar2array,
     #                            ops={"epsabs": 1.49e-03, "epsrel": 1.49e-03, "limit": 30})
     # total_time = time() - start
+    os.remove(xfn)
+    os.remove(yfn)
+    os.remove(resfn)
+    os.remove(logfile)
 
     print('MWE maximum: {} (t: {})'.format(maximumWE, total_time))
 
