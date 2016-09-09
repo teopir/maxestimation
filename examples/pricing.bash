@@ -6,11 +6,11 @@ cmd="nice -n 10 python3.5 pricing_est.py"
 
 for i in {1..10}
 do
-        ${cmd} --nbins=15 --nsamples=100 --suffix=${i} --folder=${folder}
-        ${cmd} --nbins=15 --nsamples=200 --suffix=${i} --folder=${folder}
-        ${cmd} --nbins=15 --nsamples=300 --suffix=${i} --folder=${folder}
-        ${cmd} --nbins=15 --nsamples=400 --suffix=${i} --folder=${folder}
-        ${cmd} --nbins=15 --nsamples=500 --suffix=${i} --folder=${folder}
+        ${cmd} 15 100 ${i} --folder=${folder}
+        ${cmd} 15 200 ${i} --folder=${folder}
+        ${cmd} 15 300 ${i} --folder=${folder}
+        ${cmd} 15 400 ${i} --folder=${folder}
+        ${cmd} 15 500 ${i} --folder=${folder}
 done
 
 echo "DONE"

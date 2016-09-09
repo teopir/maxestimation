@@ -45,19 +45,20 @@ def ess(self, Xnew, kern=None):
 GPy.models.GPRegression.ess = ess
 
 # parse commandline arguments
-op = OptionParser()
+op = OptionParser(usage="usage: %prog [options] nbins nsamples suffix",
+                  version="%prog 1.0")
+# op.add_option("--nbins", default=10,
+#               dest="nbins", type="int",
+#               help="Number of bins.")
+# op.add_option("--nsamples", default=300,
+#               dest="nsamples", type="int",
+#               help="Number of samples.")
+# op.add_option("--suffix",
+#               dest="suffix", type="str",
+#               help="Suffix for data name.")
 op.add_option("--folder", default='pricing_results',
               dest="folder", type="str",
               help="Destination folder.")
-op.add_option("--nbins", default=10,
-              dest="nbins", type="int",
-              help="Number of bins.")
-op.add_option("--nsamples", default=300,
-              dest="nsamples", type="int",
-              help="Number of samples.")
-op.add_option("--suffix",
-              dest="suffix", type="str",
-              help="Suffix for data name.")
 op.add_option("--clean_folder",
               dest="clean_folder", default=False,
               help="Delete the folder storing results if it exists")
@@ -70,10 +71,17 @@ op.add_option("--exclude_weighted",
 
 (opts, args) = op.parse_args()
 
+if len(args) != 3:
+    op.error("wrong number of arguments")
+
 folder = opts.folder
-suffix = opts.suffix
-nbins = opts.nbins
-nsamples = opts.nsamples
+nbins = args[0]
+nsamples = args[1]
+suffix = args[2]
+
+print(folder, nbins, nsamples, suffix)
+
+exit(9)
 
 directory = os.path.abspath(folder)
 if not os.path.exists(directory):
