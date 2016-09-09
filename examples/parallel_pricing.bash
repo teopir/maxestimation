@@ -9,4 +9,4 @@ N_PARALLEL="5"
 COMMAND="python pricing_est.py --folder=pricing_results_gmm "
 
 EXPERIMENTS=$(seq 1 $N_EXPERIMENTS)
-parallel -j $N_PARALLEL $COMMAND ::: $N_BINS ::: $N_SAMPLES ::: $EXPERIMENTS 
+parallel -j $N_PARALLEL $COMMAND ::: $EXPERIMENTS ::: $N_BINS ::: $N_SAMPLES

@@ -45,7 +45,7 @@ def ess(self, Xnew, kern=None):
 GPy.models.GPRegression.ess = ess
 
 # parse commandline arguments
-op = OptionParser(usage="usage: %prog [options] nbins nsamples suffix",
+op = OptionParser(usage="usage: %prog [options] suffix nbins nsamples",
                   version="%prog 1.0")
 # op.add_option("--nbins", default=10,
 #               dest="nbins", type="int",
@@ -75,13 +75,12 @@ if len(args) != 3:
     op.error("wrong number of arguments")
 
 folder = opts.folder
-nbins = args[0]
-nsamples = args[1]
-suffix = args[2]
+suffix = args[0]
+nbins = args[1]
+nsamples = args[2]
 
-print(folder, nbins, nsamples, suffix)
-
-exit(9)
+print("folder: {}, suffix: {}, nbins: {}, nsamples: {}".format(folder, suffix, nbins, nsamples))
+# exit(9)
 
 directory = os.path.abspath(folder)
 if not os.path.exists(directory):
