@@ -1,4 +1,5 @@
 #!/bin/bash
+export OMP_NUM_THREADS=2
 
 N_BINS="2"
 N_SAMPLES="100 200 300 400 500"
