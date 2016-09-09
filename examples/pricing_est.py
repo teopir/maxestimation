@@ -76,8 +76,8 @@ if len(args) != 3:
 
 folder = opts.folder
 suffix = args[0]
-nbins = args[1]
-nsamples = args[2]
+nbins = int(args[1])
+nsamples = int(args[2])
 
 print("folder: {}, suffix: {}, nbins: {}, nsamples: {}".format(folder, suffix, nbins, nsamples))
 # exit(9)
