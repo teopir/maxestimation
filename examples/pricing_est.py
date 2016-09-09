@@ -13,11 +13,24 @@ gmm.means_ = np.array([[2], [4], [8]])
 gmm.covars_ = np.array([[0.1], [0.1], [0.3]]) ** 2
 gmm.weights_ = np.array([0.6, 0.1, 0.3])
 
+# % Matlab command to plot CDF
 # MU = [2;4;8];
 # SIGMA = cat(3,[0.1]^2,[0.1]^2,[0.3]^2);
 # p = [0.6,0.1,0.3];
 # obj = gmdistribution(MU,SIGMA,p);
-# plot(0:0.1:10, [0:0.1:10]' .* (1- cdf(obj,[0:0.1:10]')))
+# p = 0:0.01:10;
+# val = p' .* (1 - cdf(obj,p'));
+# [m,idx] = max(val)
+# close all
+# plot(p, val, 'linewidth', 3)
+# hold on
+# plot(p(idx), val(idx), 's', 'MarkerSize',10,...
+#     'MarkerEdgeColor','red',...
+#     'MarkerFaceColor','g')
+# legend('f_{obj}', 'max')
+# text(5.8, 2.28, ['(', num2str(p(idx)), ', ', num2str(val(idx)), ')'])
+
+# MAX is circa 2.1717
 
 import os
 import sys
