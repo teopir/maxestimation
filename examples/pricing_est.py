@@ -8,14 +8,24 @@ import os
 from sklearn import mixture
 from math import sqrt
 
+GMM_CONFIG = 2
+
 gmm = mixture.GMM(n_components=3, n_iter=1)
-gmm.means_ = np.array([[2], [4], [8]])
-gmm.covars_ = np.array([[0.1], [0.1], [0.3]]) ** 2
-gmm.weights_ = np.array([0.6, 0.1, 0.3])
+if GMM_CONFIG == 1:
+    gmm.means_ = np.array([[2], [4], [8]])
+    gmm.covars_ = np.array([[0.1], [0.1], [0.3]]) ** 2
+    gmm.weights_ = np.array([0.6, 0.1, 0.3])
+elif GMM_CONFIG == 2:
+    gmm.means_ = np.array([[2], [4], [8]])
+    gmm.covars_ = np.array([[0.9], [1], [1]]) ** 2
+    gmm.weights_ = np.array([0.6, 0.1, 0.3])
+else:
+    raise ValueError('Unknown GMM config')
 
 # % Matlab command to plot CDF
 # MU = [2;4;8];
 # SIGMA = cat(3,[0.1]^2,[0.1]^2,[0.3]^2);
+# SIGMA = cat(3,[0.9]^2,[1]^2,[1]^2);
 # p = [0.6,0.1,0.3];
 # obj = gmdistribution(MU,SIGMA,p);
 # p = 0:0.01:10;
@@ -40,9 +50,8 @@ import maxest.estimate as es
 import maxest.fixsestimate as fixes
 from time import time
 
-
 ## Inject effective sample size estimator
-#def ess(self, Xnew, kern=None):
+# def ess(self, Xnew, kern=None):
 #    kern = self.kern if kern is None else kern
 #    X = self._predictive_variable
 #    Winv = self.posterior.woodbury_inv
@@ -56,7 +65,7 @@ from time import time
 #    return ess_v
 #
 #
-#GPy.models.GPRegression.ess = ess
+# GPy.models.GPRegression.ess = ess
 
 # parse commandline arguments
 op = OptionParser(usage="usage: %prog [options] suffix nbins nsamples",
