@@ -8,7 +8,7 @@ import os
 from sklearn import mixture
 from math import sqrt
 
-GMM_CONFIG = 2
+GMM_CONFIG = 1
 
 gmm = mixture.GMM(n_components=3, n_iter=1)
 if GMM_CONFIG == 1:
