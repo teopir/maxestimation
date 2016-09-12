@@ -56,6 +56,6 @@ for txtf in glob.glob("MWE*.txt"):
 	results.append([alg, nsamples, data.shape[0], means[1], stds[1], means[2], stds[2], mean_error, std_error_mean, var_err])
 
 print("-"*94)
-df = pd.DataFrame(results, columns=['Algorithm', 'Nbins', 'NSamples', 'NReps', 'MaxMean', 'MaxStd', 'TimeMean', 'TimeStd', 'ErrMaxMean', 'ErrMaxStd', 'VarErr'])
+df = pd.DataFrame(results, columns=['Algorithm', 'NSamples', 'NReps', 'MaxMean', 'MaxStd', 'TimeMean', 'TimeStd', 'ErrMaxMean', 'ErrMaxStd', 'VarErr'])
 
 
