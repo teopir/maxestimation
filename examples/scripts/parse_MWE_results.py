@@ -11,8 +11,8 @@ op.add_option("--real_max", default=2.1717,
               dest="OPTIMAL", type="float",
               help="Real expected maximum value.")
 
-op.add_option("--abs_err", default=False,
-              dest="abs_err",
+op.add_option("--abs_err", default="false",
+              dest="abs_err", type='str',
               help="Compute mean value of absolute error.")
 
 (opts, args) = op.parse_args()
@@ -25,6 +25,12 @@ folder = args[0]
 # OPTIMAL = 1.824
 OPTIMAL = opts.OPTIMAL
 abs_err = opts.abs_err
+if abs_err.lower() == "true":
+	print("WARNING: using absolute error")
+	abs_err = True
+else:
+	abs_err = False
+
 
 os.chdir(folder)
 print("{:>4}, {:>5}, {:>4}, {:>6}, {:>6}, {:>10}, {:>10}, {:>10}, {:>10}, {:>10}".format("alg", "nsamp", "nrep", "vmean", "vstd", "tmean", "tstd", "mean_verr", "std_verr", "var_err"))
@@ -43,7 +49,7 @@ for txtf in glob.glob("MWE*.txt"):
 	stds = data.std(axis=0) / np.sqrt(data.shape[0])
 	# compute error
 	err = data[:,1] - OPTIMAL
-	if abs_err == True:
+	if abs_err:
 		err = np.abs(err)
 	#err = err[np.where(err < 1)[0]]
 	mean_error = err.mean()
